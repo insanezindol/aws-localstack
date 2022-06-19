@@ -5,11 +5,10 @@ import io.awspring.cloud.messaging.config.annotation.NotificationMessage;
 import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy;
 import io.awspring.cloud.messaging.listener.annotation.SqsListener;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-
+import org.springframework.stereotype.Component;
 
 @Slf4j
-@Controller
+@Component
 public class SimpleMessageConsumer {
 
     private static final String ORDER_TRANSMISSION_QUEUE = "test-order-transmission-queue";

@@ -1,0 +1,24 @@
+###
+POST http://localhost:8080/sns/publish
+Content-Type: application/json
+
+{
+  "data": {
+    "orderId": "test-order-id-001",
+    "owner": "jinhyung.lee",
+    "eventType": "ORDER_CREATED"
+  }
+}
+
+
+###
+POST http://localhost:8080/sns/publish
+Content-Type: application/json
+
+{
+  "data": {
+    "orderId": "test-order-id-100",
+    "owner": "jinhyung.lee",
+    "eventType": "ORDER_CANCELLED"
+  }
+}
