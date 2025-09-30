@@ -1,0 +1,14 @@
+version: '3'
+services:
+
+  localstack:
+    image: localstack/localstack:0.14.3
+    ports:
+      - '4566:4566'
+    environment:
+      - SERVICES=sns,sqs
+      - EDGE_PORT=4566
+      - DEFAULT_REGION=ap-northeast-2
+    volumes:
+      - ./localstack-setup.sh:/docker-entrypoint-initaws.d/localstack-setup.sh
+      - /var/run/docker.sock:/var/run/docker.sock
