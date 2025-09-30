@@ -233,15 +233,3 @@ awslocal sns list-topics --endpoint-url=http://localhost:4566
 # SQS 큐 목록
 awslocal sqs list-queues --endpoint-url=http://localhost:4566
 ```
-
-## 기여하기
-
-1. 저장소를 포크하세요
-2. 기능 브랜치를 생성하세요
-3. 변경 사항을 커밋하세요
-4. 브랜치에 푸시하세요
-5. Pull Request를 생성하세요
-
-## 라이선스
-
-이 프로젝트는 교육 목적의 예제로 제공됩니다.
