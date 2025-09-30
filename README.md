@@ -1,18 +1,18 @@
-# AWS LocalStack SNS/SQS Integration Project
+# AWS LocalStack SNS/SQS 통합 프로젝트
 
-A Spring Boot application demonstrating AWS SNS (Simple Notification Service) and SQS (Simple Queue Service) integration using LocalStack for local development and testing.
+LocalStack을 사용하여 로컬 개발 및 테스트를 위한 AWS SNS(Simple Notification Service)와 SQS(Simple Queue Service) 통합을 보여주는 Spring Boot 애플리케이션입니다.
 
-## Overview
+## 개요
 
-This project provides a complete example of:
+이 프로젝트는 다음의 완전한 예제를 제공합니다:
 
--   Publishing messages to AWS SNS topics
--   Consuming messages from SQS queues
--   Event-driven architecture with order processing
--   Local AWS services simulation using LocalStack
--   Docker containerization for easy setup
+-   AWS SNS 토픽에 메시지 발행
+-   SQS 큐에서 메시지 소비
+-   주문 처리를 통한 이벤트 기반 아키텍처
+-   LocalStack을 사용한 로컬 AWS 서비스 시뮬레이션
+-   쉬운 설정을 위한 Docker 컨테이너화
 
-## Architecture
+## 아키텍처
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -26,54 +26,54 @@ This project provides a complete example of:
                                └───────────────────────└─ dispatch-raw-queue
 ```
 
-## Features
+## 기능
 
--   **SNS Publishing**: REST API endpoints for publishing events to SNS topics
--   **SQS Consumption**: Automatic message consumption from SQS queues
--   **Event Types**: Support for ORDER_CREATED and ORDER_CANCELLED events
--   **Message Processing**: Both JSON wrapped and raw message delivery
--   **LocalStack Integration**: Complete local AWS environment simulation
+-   **SNS 발행**: SNS 토픽에 이벤트를 발행하는 REST API 엔드포인트
+-   **SQS 소비**: SQS 큐에서 자동으로 메시지 소비
+-   **이벤트 타입**: ORDER_CREATED 및 ORDER_CANCELLED 이벤트 지원
+-   **메시지 처리**: JSON 래핑 및 원시 메시지 전달 모두 지원
+-   **LocalStack 통합**: 완전한 로컬 AWS 환경 시뮬레이션
 
-## Prerequisites
+## 필수 조건
 
--   Java 11 or higher
--   Docker and Docker Compose
--   Gradle (or use included Gradle Wrapper)
+-   Java 11 이상
+-   Docker 및 Docker Compose
+-   Gradle (또는 포함된 Gradle Wrapper 사용)
 
-## Quick Start
+## 빠른 시작
 
-### 1. Start LocalStack
+### 1. LocalStack 시작
 
 ```bash
 docker-compose up -d
 ```
 
-This will:
+이 명령은 다음을 수행합니다:
 
--   Start LocalStack container on port 4566
--   Automatically create SNS topics and SQS queues
--   Set up subscriptions between topics and queues
+-   포트 4566에서 LocalStack 컨테이너 시작
+-   SNS 토픽과 SQS 큐 자동 생성
+-   토픽과 큐 간의 구독 설정
 
-### 2. Run the Application
+### 2. 애플리케이션 실행
 
 ```bash
 ./gradlew bootRun
 ```
 
-The application will start on `http://localhost:8080`
+애플리케이션이 `http://localhost:8080`에서 시작됩니다.
 
-### 3. Test the API
+### 3. API 테스트
 
-Use the included HTTP test cases in `test-case.http` or send requests manually:
+`test-case.http`에 포함된 HTTP 테스트 케이스를 사용하거나 수동으로 요청을 보내세요:
 
-## API Documentation
+## API 문서
 
-### Publish Event
+### 이벤트 발행
 
-**Endpoint**: `POST /sns/publish`  
+**엔드포인트**: `POST /sns/publish`  
 **Content-Type**: `application/json`
 
-**Request Body**:
+**요청 본문**:
 
 ```json
 {
@@ -85,44 +85,44 @@ Use the included HTTP test cases in `test-case.http` or send requests manually:
 }
 ```
 
-**Response**: `200 OK` with body `"OK"`
+**응답**: `200 OK`와 함께 `"OK"` 본문
 
-### Supported Event Types
+### 지원되는 이벤트 타입
 
--   `ORDER_CREATED`: Triggers when a new order is created
--   `ORDER_CANCELLED`: Triggers when an order is cancelled
+-   `ORDER_CREATED`: 새 주문이 생성될 때 트리거
+-   `ORDER_CANCELLED`: 주문이 취소될 때 트리거
 
-## Project Structure
+## 프로젝트 구조
 
 ```
 ├── src/main/java/com/example/awslocalstack/
-│   ├── AwsLocalstackApplication.java      # Main Spring Boot application
+│   ├── AwsLocalstackApplication.java      # 메인 Spring Boot 애플리케이션
 │   ├── config/
-│   │   ├── AwsSnsConfig.java             # SNS configuration
-│   │   └── AwsSqsConfig.java             # SQS configuration
+│   │   ├── AwsSnsConfig.java             # SNS 설정
+│   │   └── AwsSqsConfig.java             # SQS 설정
 │   ├── controller/
-│   │   └── SnsController.java            # REST API controller
+│   │   └── SnsController.java            # REST API 컨트롤러
 │   ├── message/
-│   │   ├── SimpleMessageConsumer.java    # SQS message consumer
-│   │   └── SimpleMessageProducer.java    # Message producer
+│   │   ├── SimpleMessageConsumer.java    # SQS 메시지 소비자
+│   │   └── SimpleMessageProducer.java    # 메시지 생산자
 │   ├── model/
-│   │   ├── Event.java                    # Event model
-│   │   ├── EventData.java               # Event data model
-│   │   └── EventType.java               # Event type enum
+│   │   ├── Event.java                    # 이벤트 모델
+│   │   ├── EventData.java               # 이벤트 데이터 모델
+│   │   └── EventType.java               # 이벤트 타입 열거형
 │   └── service/
-│       └── SnsService.java              # SNS service layer
+│       └── SnsService.java              # SNS 서비스 계층
 ├── src/main/resources/
-│   ├── application.yml                   # Application configuration
-│   ├── docker-compose.yml              # Docker services setup
-│   ├── localstack-setup.sh             # LocalStack initialization
-│   ├── manual-init.sh                   # Manual setup script
-│   └── test-case.http                   # HTTP test cases
-└── build.gradle                         # Gradle build configuration
+│   ├── application.yml                   # 애플리케이션 설정
+│   ├── docker-compose.yml              # Docker 서비스 설정
+│   ├── localstack-setup.sh             # LocalStack 초기화
+│   ├── manual-init.sh                   # 수동 설정 스크립트
+│   └── test-case.http                   # HTTP 테스트 케이스
+└── build.gradle                         # Gradle 빌드 설정
 ```
 
-## Configuration
+## 설정
 
-### AWS Configuration (`application.yml`)
+### AWS 설정 (`application.yml`)
 
 ```yaml
 aws:
@@ -132,42 +132,42 @@ aws:
     region: ap-northeast-2
 ```
 
-### LocalStack Services
+### LocalStack 서비스
 
-The following AWS services are configured in LocalStack:
+LocalStack에서 다음 AWS 서비스가 설정됩니다:
 
--   **SNS Topic**: `test-order-topic`
--   **SQS Queues**:
+-   **SNS 토픽**: `test-order-topic`
+-   **SQS 큐**:
     -   `test-order-transmission-queue`
     -   `test-order-dispatch-queue`
     -   `test-order-transmission-raw-queue`
     -   `test-order-dispatch-raw-queue`
 
-## Development
+## 개발
 
-### Building the Project
+### 프로젝트 빌드
 
 ```bash
 ./gradlew build
 ```
 
-### Running Tests
+### 테스트 실행
 
 ```bash
 ./gradlew test
 ```
 
-### Manual LocalStack Setup
+### 수동 LocalStack 설정
 
-If you prefer to set up LocalStack manually:
+LocalStack을 수동으로 설정하려면:
 
 ```bash
 ./src/main/resources/manual-init.sh
 ```
 
-## Testing Examples
+## 테스트 예제
 
-### Test Case 1: Order Created Event
+### 테스트 케이스 1: 주문 생성 이벤트
 
 ```bash
 curl -X POST http://localhost:8080/sns/publish \
@@ -181,7 +181,7 @@ curl -X POST http://localhost:8080/sns/publish \
   }'
 ```
 
-### Test Case 2: Order Cancelled Event
+### 테스트 케이스 2: 주문 취소 이벤트
 
 ```bash
 curl -X POST http://localhost:8080/sns/publish \
@@ -195,53 +195,53 @@ curl -X POST http://localhost:8080/sns/publish \
   }'
 ```
 
-## Dependencies
+## 의존성
 
--   **Spring Boot 2.7.0**: Core framework
--   **Spring Cloud AWS Messaging 2.4.1**: AWS integration
--   **Amazon SQS Java Messaging Library**: SQS support
--   **Lombok**: Code generation
--   **LocalStack**: Local AWS services simulation
+-   **Spring Boot 2.7.0**: 핵심 프레임워크
+-   **Spring Cloud AWS Messaging 2.4.1**: AWS 통합
+-   **Amazon SQS Java Messaging Library**: SQS 지원
+-   **Lombok**: 코드 생성
+-   **LocalStack**: 로컬 AWS 서비스 시뮬레이션
 
-## Monitoring
+## 모니터링
 
-You can monitor LocalStack services and queues by accessing:
+다음에 접근하여 LocalStack 서비스와 큐를 모니터링할 수 있습니다:
 
--   LocalStack Dashboard: `http://localhost:4566`
--   Check queue contents using AWS CLI with LocalStack
+-   LocalStack 대시보드: `http://localhost:4566`
+-   LocalStack과 함께 AWS CLI를 사용하여 큐 내용 확인
 
-## Troubleshooting
+## 문제 해결
 
-### Common Issues
+### 일반적인 문제
 
-1. **Port Conflicts**: Ensure ports 4566 and 8080 are available
-2. **Docker Issues**: Verify Docker is running and accessible
-3. **LocalStack Initialization**: Check container logs if setup fails
+1. **포트 충돌**: 포트 4566과 8080이 사용 가능한지 확인
+2. **Docker 문제**: Docker가 실행 중이고 접근 가능한지 확인
+3. **LocalStack 초기화**: 설정이 실패할 경우 컨테이너 로그 확인
 
-### Useful Commands
+### 유용한 명령어
 
 ```bash
-# Check LocalStack status
+# LocalStack 상태 확인
 docker-compose ps
 
-# View LocalStack logs
+# LocalStack 로그 보기
 docker-compose logs localstack
 
-# List SNS topics
+# SNS 토픽 목록
 awslocal sns list-topics --endpoint-url=http://localhost:4566
 
-# List SQS queues
+# SQS 큐 목록
 awslocal sqs list-queues --endpoint-url=http://localhost:4566
 ```
 
-## Contributing
+## 기여하기
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+1. 저장소를 포크하세요
+2. 기능 브랜치를 생성하세요
+3. 변경 사항을 커밋하세요
+4. 브랜치에 푸시하세요
+5. Pull Request를 생성하세요
 
-## License
+## 라이선스
 
-This project is provided as an example for educational purposes.
+이 프로젝트는 교육 목적의 예제로 제공됩니다.
