@@ -218,7 +218,7 @@ curl -X POST http://localhost:8080/sns/publish \
 2. **Docker 문제**: Docker가 실행 중이고 접근 가능한지 확인
 3. **LocalStack 초기화**: 설정이 실패할 경우 컨테이너 로그 확인
 
-### 유용한 명령어
+### 참고 명령어
 
 ```bash
 # LocalStack 상태 확인
