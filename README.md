@@ -36,22 +36,22 @@ LocalStack을 사용하여 로컬 개발 및 테스트를 위한 AWS SNS(Simple 
 
 ## 필수 조건
 
--   Java 11 이상
+-   Java 25 (Gradle toolchain이 Java 25를 요구하므로 `JAVA_HOME`을 JDK 25로 지정)
 -   Docker 및 Docker Compose
--   Gradle (또는 포함된 Gradle Wrapper 사용)
+-   Gradle 9.8.1 (포함된 Gradle Wrapper 사용)
 
 ## 빠른 시작
 
 ### 1. LocalStack 시작
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 이 명령은 다음을 수행합니다:
 
--   포트 4566에서 LocalStack 컨테이너 시작
--   SNS 토픽과 SQS 큐 자동 생성
+-   포트 4566에서 LocalStack 컨테이너 시작 (`localstack/localstack:4.14.0`)
+-   `localstack-setup.sh`를 ready hook(`/etc/localstack/init/ready.d`)으로 실행하여 SNS 토픽과 SQS 큐 자동 생성
 -   토픽과 큐 간의 구독 설정
 
 ### 2. 애플리케이션 실행
@@ -97,9 +97,6 @@ docker-compose up -d
 ```
 ├── src/main/java/com/example/awslocalstack/
 │   ├── AwsLocalstackApplication.java      # 메인 Spring Boot 애플리케이션
-│   ├── config/
-│   │   ├── AwsSnsConfig.java             # SNS 설정
-│   │   └── AwsSqsConfig.java             # SQS 설정
 │   ├── controller/
 │   │   └── SnsController.java            # REST API 컨트롤러
 │   ├── message/
@@ -113,10 +110,10 @@ docker-compose up -d
 │       └── SnsService.java              # SNS 서비스 계층
 ├── src/main/resources/
 │   ├── application.yml                   # 애플리케이션 설정
-│   ├── docker-compose.yml              # Docker 서비스 설정
 │   ├── localstack-setup.sh             # LocalStack 초기화
 │   ├── manual-init.sh                   # 수동 설정 스크립트
 │   └── test-case.http                   # HTTP 테스트 케이스
+├── docker-compose.yml                   # Docker 서비스 설정 (LocalStack)
 └── build.gradle                         # Gradle 빌드 설정
 ```
 
@@ -124,12 +121,18 @@ docker-compose up -d
 
 ### AWS 설정 (`application.yml`)
 
+Spring Cloud AWS 자동 설정을 사용하므로 별도의 클라이언트 설정 클래스 없이 프로퍼티로 구성합니다.
+
 ```yaml
-aws:
-    endpoint: http://localhost:4566
-    accessKey: foo
-    secretKey: bar
-    region: ap-northeast-2
+spring:
+    cloud:
+        aws:
+            endpoint: http://localhost:4566
+            region:
+                static: ap-northeast-2
+            credentials:
+                access-key: foo
+                secret-key: bar
 ```
 
 ### LocalStack 서비스
@@ -156,6 +159,8 @@ LocalStack에서 다음 AWS 서비스가 설정됩니다:
 ```bash
 ./gradlew test
 ```
+
+> SQS 리스너가 컨텍스트 시작 시 LocalStack에 접속하므로 테스트 전에 `docker compose up -d`로 LocalStack을 먼저 실행해야 합니다.
 
 ### 수동 LocalStack 설정
 
@@ -197,17 +202,18 @@ curl -X POST http://localhost:8080/sns/publish \
 
 ## 의존성
 
--   **Spring Boot 2.7.0**: 핵심 프레임워크
--   **Spring Cloud AWS Messaging 2.4.1**: AWS 통합
--   **Amazon SQS Java Messaging Library**: SQS 지원
+-   **Java 25 / Gradle 9.8.1**
+-   **Spring Boot 4.1.1**: 핵심 프레임워크
+-   **Spring Cloud AWS 4.2.0** (`spring-cloud-aws-starter-sns`, `spring-cloud-aws-starter-sqs`, AWS SDK v2): AWS 통합
 -   **Lombok**: 코드 생성
--   **LocalStack**: 로컬 AWS 서비스 시뮬레이션
+-   **LocalStack 4.14.0**: 로컬 AWS 서비스 시뮬레이션
+    -   2026년 3월 이후 LocalStack 이미지(`latest`, `2026.x`)는 `LOCALSTACK_AUTH_TOKEN`이 필요합니다. 4.14.0은 토큰 없이 SNS/SQS를 사용할 수 있는 마지막 Community 버전입니다.
 
 ## 모니터링
 
 다음에 접근하여 LocalStack 서비스와 큐를 모니터링할 수 있습니다:
 
--   LocalStack 대시보드: `http://localhost:4566`
+-   LocalStack 상태 확인: `http://localhost:4566/_localstack/health`
 -   LocalStack과 함께 AWS CLI를 사용하여 큐 내용 확인
 
 ## 문제 해결
@@ -222,10 +228,10 @@ curl -X POST http://localhost:8080/sns/publish \
 
 ```bash
 # LocalStack 상태 확인
-docker-compose ps
+docker compose ps
 
 # LocalStack 로그 보기
-docker-compose logs localstack
+docker compose logs localstack
 
 # SNS 토픽 목록
 awslocal sns list-topics --endpoint-url=http://localhost:4566

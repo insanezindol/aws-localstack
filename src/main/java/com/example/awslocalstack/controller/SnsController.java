@@ -21,7 +21,7 @@ public class SnsController {
     }
 
     @PostMapping("/publish")
-    public ResponseEntity publish(@RequestBody Event event) {
+    public ResponseEntity<String> publish(@RequestBody Event event) {
         log.info("/sns/publish : {}", event);
         snsService.publish(event);
         return ResponseEntity.ok("OK");

@@ -1,0 +1,12 @@
+services:
+
+  localstack:
+    # 4.14.0: auth token 없이 사용 가능한 마지막 Community 버전 (2026.03 이후 이미지는 LOCALSTACK_AUTH_TOKEN 필요)
+    image: localstack/localstack:4.14.0
+    ports:
+      - '4566:4566'
+    environment:
+      - SERVICES=sns,sqs
+      - AWS_DEFAULT_REGION=ap-northeast-2
+    volumes:
+      - ./src/main/resources/localstack-setup.sh:/etc/localstack/init/ready.d/localstack-setup.sh

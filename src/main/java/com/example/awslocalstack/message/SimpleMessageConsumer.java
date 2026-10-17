@@ -1,9 +1,8 @@
 package com.example.awslocalstack.message;
 
 import com.example.awslocalstack.model.Event;
-import io.awspring.cloud.messaging.config.annotation.NotificationMessage;
-import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy;
-import io.awspring.cloud.messaging.listener.annotation.SqsListener;
+import io.awspring.cloud.sqs.annotation.SnsNotificationMessage;
+import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -15,15 +14,16 @@ public class SimpleMessageConsumer {
 
     private static final String ORDER_DISPATCH_QUEUE = "test-order-dispatch-queue";
 
-    @SqsListener(value = ORDER_TRANSMISSION_QUEUE, deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
-    public void consumeOrderTransmission(@NotificationMessage Event event) {
+    // 기본 acknowledgement 모드(ON_SUCCESS): 리스너가 정상 종료되면 메시지 삭제
+    @SqsListener(ORDER_TRANSMISSION_QUEUE)
+    public void consumeOrderTransmission(@SnsNotificationMessage Event event) {
         if (event != null) {
             log.info("[{}] : {}", ORDER_TRANSMISSION_QUEUE, event);
         }
     }
 
-    @SqsListener(value = ORDER_DISPATCH_QUEUE, deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
-    public void consumeOrderDispatch(@NotificationMessage Event event) {
+    @SqsListener(ORDER_DISPATCH_QUEUE)
+    public void consumeOrderDispatch(@SnsNotificationMessage Event event) {
         if (event != null) {
             log.info("[{}] : {}", ORDER_DISPATCH_QUEUE, event);
         }

@@ -1,11 +1,15 @@
 server:
   port: 8080
 
-aws:
-  endpoint: http://localhost:4566
-  accessKey: foo
-  secretKey: bar
-  region: ap-northeast-2
+spring:
+  cloud:
+    aws:
+      endpoint: http://localhost:4566
+      region:
+        static: ap-northeast-2
+      credentials:
+        access-key: foo
+        secret-key: bar
 
 message:
   version: 1.0
